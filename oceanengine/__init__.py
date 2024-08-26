@@ -1,1 +1,1 @@
-from . import report_material_get
+from .report_material_get import *

@@ -2,33 +2,21 @@ import requests
 import urllib.parse
 import json
 from oceanengine.get_access_token import load_constant
+import time
 
-
-def report_material_get():
+def report_material_get(advertiser_id, fields, timestamp, filtering={"material_type": "video"}, page=1, page_size=10):
+    timestamp = min(timestamp / 1000  + 86400 * 3, time.time())
     url = "https://api.oceanengine.com/open_api/v1.0/qianchuan/report/material/get/"
     params = {
-        "start_date": "2024-08-20",
-        "end_date": "2024-08-20",
-        "order_type": "ASC",
-        "order_field": "stat_cost",
-        "advertiser_id": 1786505526433801,
-        "filtering": {
-            "material_type": "video",
-            "video_source": [],
-            "material_id": [],
-            "material_mode": [],
-            "image_source": [],
-            "carousel_source": [],
-            "analysis_type": []
-        },
-        "fields": [
-            "ctr",
-            "create_order_roi",
-            "stat_cost",
-            "show_cnt"
-        ],
-        "page": 1,
-        "page_size": 10
+        "start_date": time.strftime('%Y-%m-%d', time.gmtime(timestamp)),
+        "end_date": time.strftime('%Y-%m-%d', time.gmtime(timestamp)),
+        "order_type": "DESC",
+        "order_field": "",
+        "advertiser_id": advertiser_id,
+        "filtering": filtering,
+        "fields": fields,
+        "page": page,
+        "page_size": page_size
     }
     headers = {
     "Access-Token": load_constant()['ACCESSTOKEN']

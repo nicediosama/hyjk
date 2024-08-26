@@ -5,14 +5,14 @@ class Table:
         match = re.search(r"base\/(.*?)\?table=(.*?)&view=(.*)", url)
         if match:
             self.parent_node = match.group(1)
-            self.table_id = match.group(2)
+            self.table = match.group(2)
             self.view = match.group(3)
     
     def update_url(self, url):
         match = re.search(r"base\/(.*?)\?table=(.*?)&view=(.*)", url)
         if match:
             self.parent_node = match.group(1)
-            self.table_id = match.group(2)
+            self.table = match.group(2)
             self.view = match.group(3)
         else:
             print("FROM: table_base.py | update url error")

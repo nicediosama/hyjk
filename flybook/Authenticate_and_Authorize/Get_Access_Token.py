@@ -90,13 +90,14 @@ class Get_Access_Token(object):
         return response.json()["data"]['ticket']
 
     def _check_error_response(self, resp, i=-1):
-        if resp.status_code != 200:
+        if resp.status_code == 200 and resp.json()['code'] == 0:
+            return True
+        else: 
             response = resp.json()
             self._auto_error_response(resp)
             print("重试次数{}, errcode = {}, msg = {}".format(i+1, response['code'], response['msg']))
             if(i == LIMIT_REQUEST): print("达到重试上限")
             return False
-        else: return True
     
     def _auto_error_response(self, resp):
         err_code = resp.json()['code']

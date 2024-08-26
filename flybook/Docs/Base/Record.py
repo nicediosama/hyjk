@@ -3,8 +3,11 @@ import os, json
 from dotenv import load_dotenv, find_dotenv
 from flybook.Authenticate_and_Authorize.Get_Access_Token import Get_Access_Token
 
-GET_CREATE_A_RECORD_RUI = "/open-apis/bitable/v1/apps/{}/tables/{}/records"
-GET_CREATE_RECORDS_RUI = "/open-apis/bitable/v1/apps/{}/tables/{}/records/batch_create"
+CREATE_A_RECORD_URI = "/open-apis/bitable/v1/apps/{}/tables/{}/records"
+CREATE_RECORDS_URI = "/open-apis/bitable/v1/apps/{}/tables/{}/records/batch_create"
+UPDATE_A_RECORD_URI = "/open-apis/bitable/v1/apps/{}/tables/{}/records/{}"
+SEARCH_RECORDS_URI = "/open-apis/bitable/v1/apps/{}/tables/{}/records/search"
+
 LIMIT_REQUEST = 5
 
 
@@ -21,7 +24,7 @@ class Record(object):
     def create_a_record(self, fields, app_token, table_id):
         # 新增记录
         for i in range(LIMIT_REQUEST):
-            url = "{}{}".format(self.FEISHU_HOST, GET_CREATE_A_RECORD_RUI.format(app_token, table_id))
+            url = "{}{}".format(self.FEISHU_HOST, CREATE_A_RECORD_URI.format(app_token, table_id))
             data = json.dumps({
                 "fields": fields
             })
@@ -34,10 +37,45 @@ class Record(object):
         return response.json()
     
 
+    def update_a_record(self,  fields, app_token, table_id, record_id):
+        # 更新记录
+        for i in range(LIMIT_REQUEST):
+            url = "{}{}".format(self.FEISHU_HOST, UPDATE_A_RECORD_URI.format(app_token, table_id, record_id))
+            data = json.dumps({
+                "fields": fields
+            })
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + self.tenant_access_token
+            }
+            response = requests.request("PUT", url, headers=headers, data=data)
+            if(self._check_error_response(response, i)): break
+        return response.json()
+
+
+    def search_records(self, app_token, table_id):
+        # 查询记录
+        for i in range(LIMIT_REQUEST):
+            url = "{}{}".format(self.FEISHU_HOST, SEARCH_RECORDS_URI.format(app_token, table_id))
+            data = json.dumps({
+                
+            })
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + self.tenant_access_token
+            }
+            response = requests.request("POST", url, headers=headers, data=data)
+            if(self._check_error_response(response, i)): break
+        return response.json()
+
+
+    def delete_a_record(self):
+        pass
+
     def create_records(self, records, app_token, table_id):
         # 新增多条记录
         for i in range(LIMIT_REQUEST):
-            url = "{}{}".format(self.FEISHU_HOST, GET_CREATE_RECORDS_RUI.format(app_token, table_id))
+            url = "{}{}".format(self.FEISHU_HOST, CREATE_RECORDS_URI.format(app_token, table_id))
             data = json.dumps({
                 "records": records
             })
@@ -49,14 +87,23 @@ class Record(object):
             if(self._check_error_response(response, i)): break
         return response.json()
 
+
+    def update_records(self):
+        pass
+    def batch_get_records(self):
+        pass
+    def delete_records(self):
+        pass
+
     def _check_error_response(self, resp, i=-1):
-        if resp.status_code != 200:
+        if resp.status_code == 200 and resp.json()['code'] == 0:
+            return True
+        else: 
             response = resp.json()
             self._auto_error_response(resp)
             print("重试次数{}, errcode = {}, msg = {}".format(i+1, response['code'], response['msg']))
             if(i == LIMIT_REQUEST): print("达到重试上限")
             return False
-        else: return True
     
     def _auto_error_response(self, resp):
         err_code = resp.json()['code']
@@ -66,6 +113,9 @@ class Record(object):
             case 91402:
                 pass
                 # 未找到指定云文档。请检查入参中 token 相关参数是否正确。请注意区分当前 token 是 wiki token 还是文档 token
+            case 1254043:
+                pass
+                # record_id 不存在
             case 99991661 | 99991663:
                 # code:99991661 请求需要使用 token 认证。请检查请求 Header 参数 Authorization 中是否填了正确的 token。填写格式为 Bearer access_token
                 # code:99991663 请求所使用的应用访问凭证（tenant_access_token）无效

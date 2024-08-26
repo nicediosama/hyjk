@@ -35,7 +35,7 @@ def init_constant():
     'APPID': 1807814572082236,
     'SECRET': 'e62f8aca97bd769ba7a5d8a93e6408056af3db50',
     'BACKURL': 'https://hyjk.jlqc.com/',
-    'AUTH_CODE': 'dea432b89cab439a2d7ca898d9a7bd709204c077',
+    'AUTH_CODE': 'c4c42ed7b93c36e4ef52a8543c7efe67d5c3fb46',
     'ACCESSTOKEN':'',
     'REFRESHTOKEN':''
     }
