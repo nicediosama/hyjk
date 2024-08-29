@@ -53,13 +53,11 @@ class Record(object):
         return response.json()
 
 
-    def search_records(self, app_token, table_id):
+    def search_records(self, app_token, table_id, filter = {}):
         # 查询记录
         for i in range(LIMIT_REQUEST):
             url = "{}{}".format(self.FEISHU_HOST, SEARCH_RECORDS_URI.format(app_token, table_id))
-            data = json.dumps({
-                
-            })
+            data = json.dumps(filter)
             headers = {
                 'Content-Type': 'application/json',
                 'Authorization': "Bearer " + self.tenant_access_token

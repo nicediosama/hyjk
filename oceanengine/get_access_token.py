@@ -35,7 +35,7 @@ def init_constant():
     'APPID': 1807814572082236,
     'SECRET': 'e62f8aca97bd769ba7a5d8a93e6408056af3db50',
     'BACKURL': 'https://hyjk.jlqc.com/',
-    'AUTH_CODE': 'c4c42ed7b93c36e4ef52a8543c7efe67d5c3fb46',
+    'AUTH_CODE': '4152586a74ffd347a933ec1669e46f0914f9ef3e',
     'ACCESSTOKEN':'',
     'REFRESHTOKEN':''
     }
@@ -49,7 +49,7 @@ def init_constant():
 def updata_constant():
     pass
 
-def load_constant():
+def load_constant(): 
     with open('./constant.pickle', 'rb') as file:
         return pickle.load(file)
 
@@ -62,6 +62,5 @@ def save_constant(constant):
 
 
 if __name__ == '__main__':
-    # init_constant()
+    init_constant()
     print(load_constant()['ACCESSTOKEN'])
-    pass

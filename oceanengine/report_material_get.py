@@ -4,12 +4,17 @@ import json
 from oceanengine.get_access_token import load_constant
 import time
 
-def report_material_get(advertiser_id, fields, timestamp, filtering={"material_type": "video"}, page=1, page_size=10):
-    timestamp = min(timestamp / 1000  + 86400 * 3, time.time())
+ONEDAY = 86400
+def report_material_get(advertiser_id, fields, start_date=None, end_date=None, filtering={"material_type": "video"}, page=1, page_size=100):
     url = "https://api.oceanengine.com/open_api/v1.0/qianchuan/report/material/get/"
+
+    if start_date == None:
+        start_date = time.strftime('%Y-%m-%d', time.gmtime(time.time() - ONEDAY * 31 * 2))
+    if end_date  == None:
+        end_date = time.strftime('%Y-%m-%d', time.gmtime(time.time()))
     params = {
-        "start_date": time.strftime('%Y-%m-%d', time.gmtime(timestamp)),
-        "end_date": time.strftime('%Y-%m-%d', time.gmtime(timestamp)),
+        "start_date": start_date,
+        "end_date": end_date,
         "order_type": "DESC",
         "order_field": "",
         "advertiser_id": advertiser_id,

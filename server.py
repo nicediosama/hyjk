@@ -10,7 +10,7 @@ from flask import Flask, request, jsonify, render_template
 from flybook import *
 import time
 from flybook import *
-
+from depend.project_1 import project_1 
 # const
 # 随机字符串，用于签名生成加密使用
 NONCE_STR = "13oEviLbrTo458A3NjrOwS70oTOXVOAm"
@@ -97,6 +97,11 @@ def backend():
             'processed_text': data_dict
         }
     )
+
+@app.route('/auto', methods=['GET'])
+def auto():
+    project_1.main()
+    return jsonify()
 
 if __name__ == "__main__":
     # 以debug模式运行本网页应用
