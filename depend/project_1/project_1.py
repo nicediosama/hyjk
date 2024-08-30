@@ -163,14 +163,15 @@ def qianchuan(RECORD, advertiser_id, start_date=None, end_date=None, flag=True):
                 
     return RECORDS
 
-def do_p2_im_message_receive_v1(data: lark.im.v1.P2ImMessageReceiveV1) -> None:
-    print(f'[ do_p2_im_message_receive_v1 access ], data: {lark.JSON.marshal(data, indent=4)}')
-def do_message_event(data: lark.CustomizedEvent) -> None:
-    print(f'[ do_customized_event access ], type: message, data: {lark.JSON.marshal(data, indent=4)}')
-event_handler = lark.EventDispatcherHandler.builder("im.message.receive_v1", "") \
-    .register_p2_im_message_receive_v1(do_p2_im_message_receive_v1) \
-    .register_p1_customized_event("", do_message_event) \
-    .build()
+# 已弃用
+# def do_p2_im_message_receive_v1(data: lark.im.v1.P2ImMessageReceiveV1) -> None:
+#     print(f'[ do_p2_im_message_receive_v1 access ], data: {lark.JSON.marshal(data, indent=4)}')
+# def do_message_event(data: lark.CustomizedEvent) -> None:
+#     print(f'[ do_customized_event access ], type: message, data: {lark.JSON.marshal(data, indent=4)}')
+# event_handler = lark.EventDispatcherHandler.builder("im.message.receive_v1", "") \
+#     .register_p2_im_message_receive_v1(do_p2_im_message_receive_v1) \
+#     .register_p1_customized_event("", do_message_event) \
+#     .build()
 
 
 
@@ -180,7 +181,6 @@ def main(T : Table = Table('https://pvca9kku524.feishu.cn/base/DIixbNfRGapT6nsG7
         'DS_zhuye_live': [],
         'JS_houtai': [],
         'DB_houtai': [],
-        'ZJF_houtai': [],
     }
     
     # TODO 找不到记录怎么办
@@ -198,8 +198,6 @@ def main(T : Table = Table('https://pvca9kku524.feishu.cn/base/DIixbNfRGapT6nsG7
                     RECORD['JS_houtai'].append((i.fields['创意ID'][0]['text'], i.record_id)) 
                 elif i.fields['视频位置'] == '氮泵（后台）':
                     RECORD['DB_houtai'].append((i.fields['创意ID'][0]['text'], i.record_id))
-                elif i.fields['视频位置'] == '增肌粉（发布后台）':
-                    RECORD['ZJF_houtai'].append((i.fields['创意ID'][0]['text'], i.record_id)) 
 
         if not gt.has_more:
             break
@@ -214,10 +212,9 @@ def main(T : Table = Table('https://pvca9kku524.feishu.cn/base/DIixbNfRGapT6nsG7
     RECORD['JS_houtai'] = qianchuan(RECORD['JS_houtai'], advertiser_id = 1784598848285699)
     # 氮泵数据
     RECORD['DB_houtai'] = qianchuan(RECORD['DB_houtai'], advertiser_id = 1788256212620363)
-    # 增肌粉后台数据
-    RECORD['ZJF_houtai'] = qianchuan(RECORD['ZJF_houtai'], advertiser_id = 1788256212620363)
     back_table(RECORD, T)
 
+    # 已弃用
     # cli = lark.ws.Client(APP_ID, APP_SECRET,
     #                      event_handler=event_handler,
     #                      log_level=lark.LogLevel.DEBUG)
@@ -227,8 +224,6 @@ def main(T : Table = Table('https://pvca9kku524.feishu.cn/base/DIixbNfRGapT6nsG7
 # ('7406619503255748671', 'recumxOROF8eCh', 8.95, '2024-08-24T16:48:14+08:00', ['first_publish', 'high_quality'])
 # ('7406619484390473764', 'recumxOROFIBrM', 8.52, '2024-08-24T16:48:28+08:00', ['high_quality'])
 # ('7407097021004382262', 'recumxOROFldWG', 22.73, '2024-08-25T23:19:48+08:00', ['high_quality'])
-# 消耗统计怎么判断？是从这个节点开始的数据，还是每条的一个月数据
-
 
 if __name__ == "__main__":
     main()

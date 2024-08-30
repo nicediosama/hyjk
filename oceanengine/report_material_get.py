@@ -24,7 +24,7 @@ def report_material_get(advertiser_id, fields, start_date=None, end_date=None, f
         "page_size": page_size
     }
     headers = {
-    "Access-Token": load_constant()['ACCESSTOKEN']
+    "Access-Token": load_constant()['access_token']
     }
     # Convert list and dict values to JSON strings
     for key, value in params.items():

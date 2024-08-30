@@ -73,35 +73,16 @@ def get_config_parameters():
 
 @app.route('/backend', methods=['GET'])
 def backend():
-    text = request.args.get("text")
-    print(text)
-    # 获取千川数据
-    data_dict = report_material_get()
-    # 多维表格地址
-    table = Table('https://pvca9kku524.feishu.cn/base/DIixbNfRGapT6nsG7p5czpB4nUe?table=tblLxmV6mRr8yz30&view=vewJI9vdRo')
-    
-    R = Record()
-    for item in data_dict["data"]["list"]:
-        material_id = item["material_id"]
-        print(type(material_id))
-        fields = {
-            "文本": str(material_id),
-            "日期": int(time.time() * 1000)
-        }
-        R.create_a_record(fields, table.parent_node, table.table_id)
-        print(material_id)
-
+    T = request.args.get("text")
+    print(T)
+    project_1.main()
     # 返回处理后的文本给前端
     return jsonify(
         {
-            'processed_text': data_dict
+            'processed_text': '已启动'
         }
     )
 
-@app.route('/auto', methods=['GET'])
-def auto():
-    project_1.main()
-    return jsonify()
 
 if __name__ == "__main__":
     # 以debug模式运行本网页应用
